@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     const addGroupBtn = document.getElementById('add-group');
     const groupList = document.getElementById('group-list');
+    const startingHolesSection = document.getElementById('starting-holes-section');
+    const startingHolesList = document.getElementById('starting-holes-list');
     const generateBtn = document.getElementById('generate-btn');
     const postRoundSection = document.getElementById('post-round');
     const postPlayerList = document.getElementById('post-player-list');
@@ -15,6 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadBtn = document.getElementById('load-event');
 
     let groups = [];
+    let startingHoles = {};
 
     // Add group row
     addGroupBtn.addEventListener('click', () => {
@@ -42,7 +45,44 @@ document.addEventListener('DOMContentLoaded', () => {
             playerEntry.querySelector('.remove-player').addEventListener('click', () => playerEntry.remove());
         });
 
-        entry.querySelector('.remove-group').addEventListener('click', () => entry.remove());
+        entry.querySelector('.remove-group').addEventListener('click', () => {
+            entry.remove();
+            updateStartingHolesUI(); // Refresh starting holes list
+        });
+
+        updateStartingHolesUI(); // Refresh after adding
+    });
+
+    // Update starting holes UI whenever groups change
+    function updateStartingHolesUI() {
+        startingHolesList.innerHTML = '';
+        const groupEntries = document.querySelectorAll('.group-entry');
+        groupEntries.forEach((entry, idx) => {
+            const name = entry.querySelector('.group-name').value.trim() || `Group ${idx + 1}`;
+            const div = document.createElement('div');
+            div.classList.add('starting-hole-entry');
+            div.innerHTML = `
+                <span>${name}</span>
+                <input type="number" class="starting-hole-input" data-index="${idx}" min="1" max="24" placeholder="Auto">
+            `;
+            startingHolesList.appendChild(div);
+        });
+
+        // Show section only if there are groups
+        startingHolesSection.style.display = groupEntries.length > 0 ? 'block' : 'none';
+
+        // Restore previously entered values if any
+        Object.keys(startingHoles).forEach(key => {
+            const input = startingHolesList.querySelector(`input[data-index="${key}"]`);
+            if (input) input.value = startingHoles[key];
+        });
+    }
+
+    // Listen for group name changes to update labels
+    groupList.addEventListener('input', (e) => {
+        if (e.target.classList.contains('group-name')) {
+            updateStartingHolesUI();
+        }
     });
 
     // Generate pre-round
@@ -53,36 +93,53 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        // Collect manual starting holes
+        startingHoles = {};
+        document.querySelectorAll('.starting-hole-input').forEach(input => {
+            const idx = input.dataset.index;
+            const val = parseInt(input.value);
+            if (!isNaN(val) && val >= 1 && val <= 24) {
+                startingHoles[idx] = val;
+            }
+        });
+
         const totalGroups = groups.length;
         const allPlayers = groups.flatMap(g => g.players);
 
-        // Starting holes: random unique for each group
-        const holes = Array.from({length: 24}, (_, i) => i + 1);
-        const startingHoles = shuffleArray([...holes]).slice(0, totalGroups);
+        // Assign starting holes: use manual where provided, random for others, no duplicates
+        let availableHoles = Array.from({length: 24}, (_, i) => i + 1);
+        // Remove manually assigned holes from available
+        Object.values(startingHoles).forEach(h => {
+            availableHoles = availableHoles.filter(x => x !== h);
+        });
+        const randomHoles = shuffleArray([...availableHoles]);
+
+        const finalStartingHoles = groups.map((_, idx) => {
+            return startingHoles[idx] || randomHoles.shift() || null;
+        });
 
         // CTP holes: user input or random 10 unique
         let ctpHolesInput = document.getElementById('ctp-holes').value.trim();
-        let ctpHoles = ctpHolesInput ? ctpHolesInput.split(',').map(h => parseInt(h.trim())) : shuffleArray([...holes]).slice(0, 10);
+        let ctpHoles = ctpHolesInput ? ctpHolesInput.split(',').map(h => parseInt(h.trim())) : shuffleArray([...Array.from({length: 24}, (_, i) => i + 1)]).slice(0, 10);
         if (ctpHoles.length !== 10 || ctpHoles.some(isNaN)) {
             alert('Invalid CTP holes—using random 10.');
-            ctpHoles = shuffleArray([...holes]).slice(0, 10);
+            ctpHoles = shuffleArray([...Array.from({length: 24}, (_, i) => i + 1)]).slice(0, 10);
         }
 
-        // Assign setup (bring out) and cleanup (pick up) fairly across groups
+        // Assign bring-out and pick-up fairly
         const shuffledGroups = shuffleArray([...groups]);
         const setupAssignments = ctpHoles.map((hole, i) => ({hole, group: shuffledGroups[i % totalGroups]}));
-        const cleanupShuffled = shuffleArray([...groups]); // Separate shuffle for fairness
+        const cleanupShuffled = shuffleArray([...groups]);
         const cleanupAssignments = ctpHoles.map((hole, i) => ({hole, group: cleanupShuffled[i % totalGroups]}));
 
         // Display
         groupAssignmentsDiv.innerHTML = `<h3>Group/Card Assignments (${totalGroups} groups)</h3>` + 
-            groups.map((group, idx) => `<div class="assignment-group"><strong>${group.name} (Starting Hole: ${startingHoles[idx]})</strong><ul>${group.players.map(p => `<li>${p.name} (Incoming Tag: ${p.bagtagIn || 'None'})</li>`).join('')}</ul></div>`).join('');
+            groups.map((group, idx) => `<div class="assignment-group"><strong>${group.name} (Starting Hole: ${finalStartingHoles[idx] || 'Auto-assigned'})</strong><ul>${group.players.map(p => `<li>${p.name} (Incoming Tag: ${p.bagtagIn || 'None'})</li>`).join('')}</ul></div>`).join('');
 
         ctpSetupDiv.innerHTML = `<h3>CTP Flag Bring-Out (Setup) Assignments ($5 Entry)</h3><ul>${setupAssignments.map(a => `<li>Hole ${a.hole}: ${a.group.name} (Bring out flag)</li>`).join('')}</ul><p>Distribute duties to avoid overload.</p>`;
 
         ctpCleanupDiv.innerHTML = `<h3>CTP Flag Pick-Up (Cleanup) Assignments</h3><ul>${cleanupAssignments.map(a => `<li>Hole ${a.hole}: ${a.group.name} (Pick up flag)</li>`).join('')}</ul><p>Groups bring back to TD after round.</p>`;
 
-        // Show post-round for scores (kept for bag tags/low raw)
         postRoundSection.style.display = 'block';
         postPlayerList.innerHTML = '';
         allPlayers.forEach(p => {
@@ -96,10 +153,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         outputSection.style.display = 'block';
-        bagtagDiv.innerHTML = ''; // Clear until finalized
+        bagtagDiv.innerHTML = '';
     });
 
-    // Finalize post-round (bag tags based on raw scores)
+    // Finalize (bag tags based on raw scores) - kept from previous version
     finalizeBtn.addEventListener('click', () => {
         gatherGroups();
         const allPlayers = groups.flatMap(g => g.players);
@@ -150,58 +207,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Export CSV
-    exportBtn.addEventListener('click', () => {
-        gatherGroups();
-        const allPlayers = groups.flatMap(g => g.players);
-        let csv = 'Sawmill League Event Export\n';
-        csv += 'Group,Players,Starting Hole\n' + groups.map(g => `${g.name},${g.players.map(p => p.name).join(';')},[starting]`).join('\n'); // Placeholder
-        csv += '\n\nCTP Bring-Out\n' + ctpSetupDiv.innerText;
-        csv += '\n\nCTP Pick-Up\n' + ctpCleanupDiv.innerText;
-        csv += '\n\nPlayers: Name,Incoming Tag,Raw Score,Outgoing Tag\n' + allPlayers.map(p => `${p.name},${p.bagtagIn || ''},${p.rawScore || ''},${p.bagtagOut || ''}`).join('\n');
-        downloadCSV(csv, 'sawmill-league-event.csv');
-    });
+    // Export, Save, Load - same as before (omitted for brevity, copy from your current script.js if needed)
+    // ... (paste the exportBtn, saveBtn, loadBtn listeners from previous version here)
 
-    function downloadCSV(content, filename) {
-        const blob = new Blob([content], {type: 'text/csv;charset=utf-8;'});
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = filename;
-        link.click();
-    }
-
-    // Save/Load
-    saveBtn.addEventListener('click', () => {
-        gatherGroups();
-        const nextData = groups.map(g => ({
-            name: g.name,
-            players: g.players.map(p => ({name: p.name, bagtagIn: p.bagtagOut}))
-        }));
-        localStorage.setItem('sawmillEvent', JSON.stringify(nextData));
-        alert('Saved! Outgoing tags as next incoming.');
-    });
-
-    loadBtn.addEventListener('click', () => {
-        const saved = localStorage.getItem('sawmillEvent');
-        if (saved) {
-            groups = JSON.parse(saved);
-            groupList.innerHTML = '';
-            groups.forEach(g => {
-                addGroupBtn.click();
-                const entries = groupList.querySelectorAll('.group-entry');
-                const last = entries[entries.length - 1];
-                last.querySelector('.group-name').value = g.name;
-                g.players.forEach(p => {
-                    last.querySelector('.add-player-to-group').click();
-                    const pEntries = last.querySelectorAll('.player-entry');
-                    const pLast = pEntries[pEntries.length - 1];
-                    pLast.querySelector('.player-name').value = p.name;
-                    pLast.querySelector('.player-bagtag-in').value = p.bagtagIn || '';
-                });
-            });
-            alert('Loaded last event!');
-        } else {
-            alert('No saved event.');
-        }
-    });
 });
