@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sawmill Handicap & Bag Tag League Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sawmill Disc Golf League Manager</h1>
+        <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m. • Check-in by 8:50 a.m.</p>
+        <p>Handicapped + Bag Tag League | 10 CTPs | Bogey-Free & Low Raw Buy-Ins</p>
+    </header>
+    
+    <section id="setup">
+        <h2>Event Setup</h2>
+        <label for="course">Course/Layout:</label>
+        <input type="text" id="course" value="The Sawmill (24 Holes)" placeholder="e.g., The Sawmill Front 12 or Full 24">
+        
+        <label for="total-players">Total Players (10–30 avg):</label>
+        <input type="number" id="total-players" min="3" value="16">
+        
+        <h3>Players (Name, Handicap, Incoming Bag Tag # optional)</h3>
+        <div id="player-list"></div>
+        <button id="add-player">Add Player</button>
+    </section>
+    
+    <section id="generate">
+        <button id="generate-btn">Generate Cards, CTPs & Pre-Round Summary</button>
+    </section>
+    
+    <section id="post-round" style="display: none;">
+        <h2>Post-Round Inputs</h2>
+        <p>Enter raw scores for each player below (lowest raw score wins bag tags, low raw buy-in, etc.). Handicaps are for net payouts only.</p>
+        <div id="post-player-list"></div>
+        <button id="finalize-btn">Finalize Results & Assign Bag Tags</button>
+    </section>
+    
+    <section id="output" style="display: none;">
+        <h2>Event Summary</h2>
+        <div id="cards"></div>
+        <div id="ctp-assignments"></div>
+        <div id="handicap-summary"></div>
+        <div id="bagtag-summary"></div>
+        <div id="buyins-payouts">
+            <h3>Buy-Ins & Payouts</h3>
+            <ul>
+                <li><strong>Mandatory $3/player</strong>: $1 to Ace Pot (auto-entry for all players), $2 to club</li>
+                <li><strong>CTP Entry (10 CTPs)</strong>: $5/player (optional) → 100% payout to 10 winners (one per CTP hole)</li>
+                <li><strong>Bogey-Free Round</strong>: $1? (optional) → 100% payout to winner(s) with no bogeys or worse</li>
+                <li><strong>Best Low Raw Score</strong>: $3? (optional) → 100% payout to player with lowest raw score</li>
+            </ul>
+            <p>Ace Pot: Everyone auto-entered via mandatory $1—track running total and winners separately (e.g., in a shared sheet).</p>
+            <p>Total potential buy-in per player: $3 mandatory + $5 CTP + optional extras.</p>
+        </div>
+        <button id="export-csv">Export to CSV</button>
+        <button id="save-event">Save This Event (for Next Week's Incoming Tags)</button>
+        <button id="load-event">Load Last Event (Use Outgoing as Incoming)</button>
+    </section>
+    
+    <script src="script.js"></script>
+</body>
+</html>
