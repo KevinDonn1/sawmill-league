@@ -50,21 +50,26 @@ button:hover {
     background: #006400;
 }
 
-.player-entry, .post-player-entry {
+.group-entry, .post-player-entry {
     display: flex;
+    flex-wrap: wrap;
     margin-bottom: 10px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    border-radius: 4px;
 }
 
-.player-entry input, .post-player-entry input {
-    flex: 1;
+.group-entry input, .post-player-entry input {
+    flex: 1 1 30%;
     margin-right: 5px;
 }
 
-.player-entry button, .post-player-entry button {
+.group-entry button, .post-player-entry button {
     background: #B22222;
+    flex: 0 0 auto;
 }
 
-.card-group {
+.card-group, .assignment-group {
     margin-bottom: 15px;
     padding: 10px;
     border: 1px solid #ccc;
