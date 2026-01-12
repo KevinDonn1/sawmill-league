@@ -18,29 +18,33 @@
         <label for="course">Course/Layout:</label>
         <input type="text" id="course" value="The Sawmill (24 Holes)" placeholder="e.g., The Sawmill Front 12 or Full 24">
         
-        <label for="total-players">Total Players (10–30 avg):</label>
-        <input type="number" id="total-players" min="3" value="16">
+        <label for="ctp-holes">10 CTP Holes (comma-separated, e.g., 1,3,5,...):</label>
+        <input type="text" id="ctp-holes" placeholder="Random if blank" value="">
         
-        <h3>Players (Name, Handicap, Incoming Bag Tag # optional)</h3>
-        <div id="player-list"></div>
-        <button id="add-player">Add Player</button>
+        <label for="total-groups">Total Groups/Cards (3–8 avg):</label>
+        <input type="number" id="total-groups" min="1" value="4">
+        
+        <h3>Groups (Enter Group Name/Rep, Optional Players)</h3>
+        <div id="group-list"></div>
+        <button id="add-group">Add Group</button>
     </section>
     
     <section id="generate">
-        <button id="generate-btn">Generate Cards, CTPs & Pre-Round Summary</button>
+        <button id="generate-btn">Generate Assignments & Pre-Round Summary</button>
     </section>
     
     <section id="post-round" style="display: none;">
         <h2>Post-Round Inputs</h2>
-        <p>Enter raw scores for each player below (lowest raw score wins bag tags, low raw buy-in, etc.). Handicaps are for net payouts only.</p>
+        <p>Enter raw scores for players (for tags/low raw). Handicaps for net.</p>
         <div id="post-player-list"></div>
         <button id="finalize-btn">Finalize Results & Assign Bag Tags</button>
     </section>
     
     <section id="output" style="display: none;">
         <h2>Event Summary</h2>
-        <div id="cards"></div>
-        <div id="ctp-assignments"></div>
+        <div id="group-assignments"></div>
+        <div id="ctp-setup"></div>
+        <div id="ctp-cleanup"></div>
         <div id="handicap-summary"></div>
         <div id="bagtag-summary"></div>
         <div id="buyins-payouts">
