@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const groupAssignmentsDiv = document.getElementById('group-assignments');
     const ctpSetupDiv = document.getElementById('ctp-setup');
     const ctpCleanupDiv = document.getElementById('ctp-cleanup');
-    const handicapDiv = document.getElementById('handicap-summary');
     const bagtagDiv = document.getElementById('bagtag-summary');
     const exportBtn = document.getElementById('export-csv');
     const saveBtn = document.getElementById('save-event');
@@ -22,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const entry = document.createElement('div');
         entry.classList.add('group-entry');
         entry.innerHTML = `
-            <input type="text" class="group-name" placeholder="Group Name/Rep (e.g., Kevin's Card)">
+            <input type="text" class="group-name" placeholder="Group/Card Name/Rep (e.g., Kevin's Card)">
             <h4>Optional Players in Group</h4>
             <div class="player-sub-list"></div>
             <button class="add-player-to-group">Add Player to Group</button>
@@ -36,7 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
             playerEntry.classList.add('player-entry');
             playerEntry.innerHTML = `
                 <input type="text" class="player-name" placeholder="Player Name">
-                <input type="number" class="player-handicap" placeholder="Handicap" step="0.1">
                 <input type="number" class="player-bagtag-in" placeholder="Incoming Bag Tag" min="1" max="75">
                 <button class="remove-player">Remove</button>
             `;
@@ -70,27 +68,21 @@ document.addEventListener('DOMContentLoaded', () => {
             ctpHoles = shuffleArray([...holes]).slice(0, 10);
         }
 
-        // Assign setup (take out) and cleanup (pick up) fairly across groups
+        // Assign setup (bring out) and cleanup (pick up) fairly across groups
         const shuffledGroups = shuffleArray([...groups]);
         const setupAssignments = ctpHoles.map((hole, i) => ({hole, group: shuffledGroups[i % totalGroups]}));
         const cleanupShuffled = shuffleArray([...groups]); // Separate shuffle for fairness
         const cleanupAssignments = ctpHoles.map((hole, i) => ({hole, group: cleanupShuffled[i % totalGroups]}));
 
-        // Handicap avg
-        const handicaps = allPlayers.map(p => p.handicap || 0);
-        const avgHandicap = handicaps.length > 0 ? handicaps.reduce((a, b) => a + b, 0) / handicaps.length : 0;
-
         // Display
-        groupAssignmentsDiv.innerHTML = `<h3>Group Assignments (${totalGroups} groups)</h3>` + 
-            groups.map((group, idx) => `<div class="assignment-group"><strong>${group.name} (Starting Hole: ${startingHoles[idx]})</strong><ul>${group.players.map(p => `<li>${p.name} (Handicap: ${p.handicap || 'N/A'}, Incoming Tag: ${p.bagtagIn || 'None'})</li>`).join('')}</ul></div>`).join('');
+        groupAssignmentsDiv.innerHTML = `<h3>Group/Card Assignments (${totalGroups} groups)</h3>` + 
+            groups.map((group, idx) => `<div class="assignment-group"><strong>${group.name} (Starting Hole: ${startingHoles[idx]})</strong><ul>${group.players.map(p => `<li>${p.name} (Incoming Tag: ${p.bagtagIn || 'None'})</li>`).join('')}</ul></div>`).join('');
 
-        ctpSetupDiv.innerHTML = `<h3>CTP Flag Take-Out (Setup) Assignments ($5 Entry)</h3><ul>${setupAssignments.map(a => `<li>Hole ${a.hole}: ${a.group.name} (Take out flag)</li>`).join('')}</ul><p>Distribute duties to avoid overload.</p>`;
+        ctpSetupDiv.innerHTML = `<h3>CTP Flag Bring-Out (Setup) Assignments ($5 Entry)</h3><ul>${setupAssignments.map(a => `<li>Hole ${a.hole}: ${a.group.name} (Bring out flag)</li>`).join('')}</ul><p>Distribute duties to avoid overload.</p>`;
 
         ctpCleanupDiv.innerHTML = `<h3>CTP Flag Pick-Up (Cleanup) Assignments</h3><ul>${cleanupAssignments.map(a => `<li>Hole ${a.hole}: ${a.group.name} (Pick up flag)</li>`).join('')}</ul><p>Groups bring back to TD after round.</p>`;
 
-        handicapDiv.innerHTML = `<h3>Handicap Summary (for Net Payouts)</h3><p>Avg Handicap: ${avgHandicap.toFixed(2)}</p><p>Net Score = Raw Score - Handicap.</p>`;
-
-        // Show post-round for scores
+        // Show post-round for scores (kept for bag tags/low raw)
         postRoundSection.style.display = 'block';
         postPlayerList.innerHTML = '';
         allPlayers.forEach(p => {
@@ -107,19 +99,16 @@ document.addEventListener('DOMContentLoaded', () => {
         bagtagDiv.innerHTML = ''; // Clear until finalized
     });
 
-    // Finalize post-round
+    // Finalize post-round (bag tags based on raw scores)
     finalizeBtn.addEventListener('click', () => {
-        gatherGroups(); // Refresh
+        gatherGroups();
         const allPlayers = groups.flatMap(g => g.players);
         const scoreEntries = document.querySelectorAll('.post-player-entry');
         let hasScores = true;
         scoreEntries.forEach((entry, i) => {
             const rawScore = parseFloat(entry.querySelector('.player-raw-score').value);
             if (isNaN(rawScore)) hasScores = false;
-            else {
-                allPlayers[i].rawScore = rawScore;
-                allPlayers[i].netScore = rawScore - (allPlayers[i].handicap || 0);
-            }
+            else allPlayers[i].rawScore = rawScore;
         });
 
         if (!hasScores) {
@@ -134,8 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         bagtagDiv.innerHTML = `<h3>Bag Tag Results (Raw Scores)</h3>
-            <table><thead><tr><th>Player</th><th>Raw</th><th>Net</th><th>In Tag</th><th>Out Tag</th></tr></thead>
-            <tbody>${sortedByRaw.map(p => `<tr><td>${p.name}</td><td>${p.rawScore}</td><td>${p.netScore.toFixed(2)}</td><td>${p.bagtagIn || 'None'}</td><td>${p.bagtagOut || 'None'}</td></tr>`).join('')}</tbody></table>
+            <table><thead><tr><th>Player</th><th>Raw</th><th>In Tag</th><th>Out Tag</th></tr></thead>
+            <tbody>${sortedByRaw.map(p => `<tr><td>${p.name}</td><td>${p.rawScore}</td><td>${p.bagtagIn || 'None'}</td><td>${p.bagtagOut || 'None'}</td></tr>`).join('')}</tbody></table>
             <p>Low Raw Winner: ${sortedByRaw[0].name} (Score: ${sortedByRaw[0].rawScore})</p>`;
     });
 
@@ -146,9 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const players = [];
             entry.querySelectorAll('.player-entry').forEach(pEntry => {
                 const pName = pEntry.querySelector('.player-name').value.trim();
-                const handicap = parseFloat(pEntry.querySelector('.player-handicap').value) || 0;
                 const bagtagIn = parseInt(pEntry.querySelector('.player-bagtag-in').value) || null;
-                if (pName) players.push({name: pName, handicap, bagtagIn});
+                if (pName) players.push({name: pName, bagtagIn});
             });
             if (name) groups.push({name, players});
         });
@@ -162,15 +150,15 @@ document.addEventListener('DOMContentLoaded', () => {
         return array;
     }
 
-    // Export CSV (updated with new assignments)
+    // Export CSV
     exportBtn.addEventListener('click', () => {
         gatherGroups();
         const allPlayers = groups.flatMap(g => g.players);
         let csv = 'Sawmill League Event Export\n';
-        csv += 'Group,Players,Starting Hole\n' + groups.map(g => `${g.name},${g.players.map(p => p.name).join(';')},[starting]`).join('\n'); // Placeholder for starting
-        csv += '\n\nCTP Setup\n' + ctpSetupDiv.innerText;
-        csv += '\n\nCTP Cleanup\n' + ctpCleanupDiv.innerText;
-        csv += '\n\nPlayers: Name,Handicap,Incoming Tag,Raw Score,Net Score,Outgoing Tag\n' + allPlayers.map(p => `${p.name},${p.handicap},${p.bagtagIn || ''},${p.rawScore || ''},${p.netScore || ''},${p.bagtagOut || ''}`).join('\n');
+        csv += 'Group,Players,Starting Hole\n' + groups.map(g => `${g.name},${g.players.map(p => p.name).join(';')},[starting]`).join('\n'); // Placeholder
+        csv += '\n\nCTP Bring-Out\n' + ctpSetupDiv.innerText;
+        csv += '\n\nCTP Pick-Up\n' + ctpCleanupDiv.innerText;
+        csv += '\n\nPlayers: Name,Incoming Tag,Raw Score,Outgoing Tag\n' + allPlayers.map(p => `${p.name},${p.bagtagIn || ''},${p.rawScore || ''},${p.bagtagOut || ''}`).join('\n');
         downloadCSV(csv, 'sawmill-league-event.csv');
     });
 
@@ -182,12 +170,12 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
     }
 
-    // Save/Load (now saves groups/players)
+    // Save/Load
     saveBtn.addEventListener('click', () => {
         gatherGroups();
         const nextData = groups.map(g => ({
             name: g.name,
-            players: g.players.map(p => ({name: p.name, handicap: p.handicap, bagtagIn: p.bagtagOut}))
+            players: g.players.map(p => ({name: p.name, bagtagIn: p.bagtagOut}))
         }));
         localStorage.setItem('sawmillEvent', JSON.stringify(nextData));
         alert('Saved! Outgoing tags as next incoming.');
@@ -208,7 +196,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     const pEntries = last.querySelectorAll('.player-entry');
                     const pLast = pEntries[pEntries.length - 1];
                     pLast.querySelector('.player-name').value = p.name;
-                    pLast.querySelector('.player-handicap').value = p.handicap || '';
                     pLast.querySelector('.player-bagtag-in').value = p.bagtagIn || '';
                 });
             });
