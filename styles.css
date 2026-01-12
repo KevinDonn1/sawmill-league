@@ -1,98 +1,31 @@
-/* Same as before, no changes needed */
-body {
-    font-family: Arial, sans-serif;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
+body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
 
-header {
-    text-align: center;
-    margin-bottom: 20px;
-    background: #228B22;
-    color: white;
-    padding: 15px;
-    border-radius: 8px;
-}
+header { text-align: center; margin-bottom: 20px; background: #228B22; color: white; padding: 15px; border-radius: 8px; }
 
-section {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
+section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
 
-label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-}
+h2 { color: #006400; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 15px; }
 
-input, select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    box-sizing: border-box;
-}
+label { display: block; margin: 12px 0 6px; font-weight: bold; }
 
-button {
-    background: #228B22;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-right: 10px;
-}
+input { width: 100%; padding: 8px; margin-bottom: 12px; box-sizing: border-box; }
 
-button:hover {
-    background: #006400;
-}
+button { background: #228B22; color: white; padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
 
-.group-entry, .post-player-entry {
-    display: flex;
-    flex-wrap: wrap;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    padding: 10px;
-    border-radius: 4px;
-}
+button:hover { background: #006400; }
 
-.group-entry input, .post-player-entry input {
-    flex: 1 1 30%;
-    margin-right: 5px;
-}
+.group-entry { border: 1px solid #ddd; padding: 12px; margin-bottom: 15px; border-radius: 6px; background: #f9f9f9; }
 
-.group-entry button, .post-player-entry button {
-    background: #B22222;
-    flex: 0 0 auto;
-}
+.group-entry input[type="text"] { width: 60%; }
 
-.starting-hole-entry {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-}
+.starting-hole-entry { display: flex; align-items: center; margin-bottom: 12px; padding: 8px; background: #f0f8f0; border-radius: 4px; }
 
-.starting-hole-entry span {
-    flex: 1;
-    font-weight: bold;
-}
+.starting-hole-entry span { flex: 1; font-weight: bold; }
 
-.starting-hole-entry input {
-    width: 80px;
-    margin-left: 10px;
-}
+.starting-hole-entry input { width: 80px; text-align: center; }
 
-.assignment-group {
-    margin-bottom: 15px;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-}
+.assignment-group { margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; background: #f9fff9; }
 
-#output div {
-    margin-top: 20px;
-}
+#output ul { list-style-type: none; padding-left: 0; }
+
+#output li { margin: 6px 0; font-size: 1.05em; }
