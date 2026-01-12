@@ -1,3 +1,4 @@
+/* Same as before, no changes needed */
 body {
     font-family: Arial, sans-serif;
     max-width: 900px;
@@ -67,6 +68,22 @@ button:hover {
 .group-entry button, .post-player-entry button {
     background: #B22222;
     flex: 0 0 auto;
+}
+
+.starting-hole-entry {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.starting-hole-entry span {
+    flex: 1;
+    font-weight: bold;
+}
+
+.starting-hole-entry input {
+    width: 80px;
+    margin-left: 10px;
 }
 
 .assignment-group {
