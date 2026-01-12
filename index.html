@@ -14,35 +14,23 @@
     </header>
     
     <section id="setup">
-        <h2>Event Setup</h2>
-        <label for="course">Course/Layout:</label>
-        <input type="text" id="course" value="The Sawmill (24 Holes)" placeholder="e.g., The Sawmill Front 12 or Full 24">
+        <h2>1. Enter CTP Holes</h2>
+        <label for="ctp-holes">10 CTP Holes (comma-separated, e.g. 3,5,7,9,11,13,15,17,19,21):</label>
+        <input type="text" id="ctp-holes" placeholder="Leave blank for random 10 holes" value="">
         
-        <label for="ctp-holes">10 CTP Holes (comma-separated, e.g., 1,3,5,...):</label>
-        <input type="text" id="ctp-holes" placeholder="Random if blank" value="">
-        
-        <label for="total-groups">Total Groups/Cards (3–8 avg):</label>
-        <input type="number" id="total-groups" min="1" value="4">
-        
-        <h3>Groups/Cards</h3>
+        <h2>2. Add Groups/Cards</h2>
         <div id="group-list"></div>
         <button id="add-group">Add Group/Card</button>
         
-        <div id="starting-holes-section" style="display:none; margin-top:20px;">
-            <h3>Starting Holes (enter manually or leave blank for random)</h3>
+        <div id="starting-holes-section" style="display:none; margin-top:30px; border-top:2px solid #ccc; padding-top:20px;">
+            <h2>3. Assign Starting Holes (one per group/card)</h2>
+            <p>Enter a unique hole number (1–24) for each group. Duplicates will be flagged.</p>
             <div id="starting-holes-list"></div>
         </div>
     </section>
     
     <section id="generate">
-        <button id="generate-btn">Generate Assignments & Pre-Round Summary</button>
-    </section>
-    
-    <section id="post-round" style="display: none;">
-        <h2>Post-Round Inputs</h2>
-        <p>Enter raw scores for players (for tags/low raw).</p>
-        <div id="post-player-list"></div>
-        <button id="finalize-btn">Finalize Results & Assign Bag Tags</button>
+        <button id="generate-btn">Generate CTP Assignments</button>
     </section>
     
     <section id="output" style="display: none;">
@@ -50,21 +38,10 @@
         <div id="group-assignments"></div>
         <div id="ctp-setup"></div>
         <div id="ctp-cleanup"></div>
-        <div id="bagtag-summary"></div>
-        <div id="buyins-payouts">
-            <h3>Buy-Ins & Payouts</h3>
-            <ul>
-                <li><strong>Mandatory $3/player</strong>: $1 to Ace Pot (auto-entry for all players), $2 to club</li>
-                <li><strong>CTP Entry (10 CTPs)</strong>: $5/player (optional) → 100% payout to 10 winners (one per CTP hole)</li>
-                <li><strong>Bogey-Free Round</strong>: $1? (optional) → 100% payout to winner(s) with no bogeys or worse</li>
-                <li><strong>Best Low Raw Score</strong>: $3? (optional) → 100% payout to player with lowest raw score</li>
-            </ul>
-            <p>Ace Pot: Everyone auto-entered via mandatory $1—track running total and winners separately (e.g., in a shared sheet).</p>
-            <p>Total potential buy-in per player: $3 mandatory + $5 CTP + optional extras.</p>
-        </div>
+        <div id="bagtag-summary" style="display:none;"></div> <!-- hidden unless you want bag tags back -->
         <button id="export-csv">Export to CSV</button>
-        <button id="save-event">Save This Event (for Next Week's Incoming Tags)</button>
-        <button id="load-event">Load Last Event (Use Outgoing as Incoming)</button>
+        <button id="save-event">Save Event</button>
+        <button id="load-event">Load Last Event</button>
     </section>
     
     <script src="script.js"></script>
