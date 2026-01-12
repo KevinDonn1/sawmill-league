@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sawmill Handicap & Bag Tag League Manager</title>
+    <title>Sawmill Disc Golf League Manager</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
         <h1>Sawmill Disc Golf League Manager</h1>
         <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m. • Check-in by 8:50 a.m.</p>
-        <p>Handicapped + Bag Tag League | 10 CTPs | Bogey-Free & Low Raw Buy-Ins</p>
+        <p>Bag Tag League | 10 CTPs | Bogey-Free & Low Raw Buy-Ins</p>
     </header>
     
     <section id="setup">
@@ -24,9 +24,9 @@
         <label for="total-groups">Total Groups/Cards (3–8 avg):</label>
         <input type="number" id="total-groups" min="1" value="4">
         
-        <h3>Groups (Enter Group Name/Rep, Optional Players)</h3>
+        <h3>Groups/Cards (Enter Group Name/Rep, Optional Players)</h3>
         <div id="group-list"></div>
-        <button id="add-group">Add Group</button>
+        <button id="add-group">Add Group/Card</button>
     </section>
     
     <section id="generate">
@@ -35,7 +35,7 @@
     
     <section id="post-round" style="display: none;">
         <h2>Post-Round Inputs</h2>
-        <p>Enter raw scores for players (for tags/low raw). Handicaps for net.</p>
+        <p>Enter raw scores for players (for tags/low raw).</p>
         <div id="post-player-list"></div>
         <button id="finalize-btn">Finalize Results & Assign Bag Tags</button>
     </section>
@@ -45,7 +45,6 @@
         <div id="group-assignments"></div>
         <div id="ctp-setup"></div>
         <div id="ctp-cleanup"></div>
-        <div id="handicap-summary"></div>
         <div id="bagtag-summary"></div>
         <div id="buyins-payouts">
             <h3>Buy-Ins & Payouts</h3>
