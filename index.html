@@ -1,13 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sawmill CTP & Bag Tag Manager (Testing Branch)</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Sawmill CTP & Bag Tag Manager (Testing Branch)</h1>
+        <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m.</p>
+    </header>
+
+    <section id="setup">
+        <h2>Weekly Setup</h2>
+
+        <label for="group-starts">Group Starting Holes (comma-separated):</label>
+        <input type="text" id="group-starts" placeholder="1,10,12,21">
+
+        <label for="ctp-holes">CTP Holes (comma-separated, 10 holes):</label>
+        <input type="text" id="ctp-holes" placeholder="3,4,5,6,8,10,11,12,19,24">
+
+        <h2>Players & Incoming Tags (collected at registration)</h2>
+        <div id="player-list"></div>
+        <button id="add-player">Add Player</button>
+
+        <button id="generate-btn">Generate Flag Assignments & Prepare Scores</button>
+    </section>
+
+    <section id="scores-section" style="display:none;">
+        <h2>Enter Raw Scores from UDisc</h2>
+        <div id="score-list"></div>
+        <button id="assign-tags-btn">Assign New Bag Tags</button>
+    </section>
+
     <section id="output" style="display:none;">
         <h2>CTP Flag Assignments</h2>
         <div id="ctp-flags"></div>
-        
+
         <h2>Bag Tag Results</h2>
-        <div id="bagtag-results" class="results-list"></div>
-        
+        <div id="bagtag-results"></div>
+
         <h2>Current Tag Owners (for next week)</h2>
-        <div id="current-tags" class="results-list"></div>
-        
-        <button id="save-session">Save for Next Week</button>
-        <button id="load-last">Load Last Week's Tags</button>
+        <div id="current-tags"></div>
+
+        <div style="margin-top:30px;">
+            <button id="save-session">Save for Next Week</button>
+            <button id="load-last">Load Last Week's Tags</button>
+        </div>
     </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
