@@ -86,8 +86,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Flag bring out/pick up logic
         const { bringOut, pickUp } = calculateFlagAssignments(groupStarts, ctpHoles);
-        ctpFlagsDiv.innerHTML = `<h3>Bring Out CTP Flags</h3><ul>${Object.entries(bringOut).map(([group, holes]) => `<li>Group ${group}: ${holes.join(', ') || 'None'}</li>`).join('')}</ul>
-            <h3>Pick Up CTP Flags</h3><ul>${Object.entries(pickUp).map(([group, holes]) => `<li>Group ${group}: ${holes.join(', ') || 'None'}</li>`).join('')}</ul>`;
+
+        let flagsHTML = '<h3>CTP Flag Assignments</h3>';
+        for (let group = 1; group <= numGroups; group++) {
+            const takeOut = (bringOut[group] || []).sort((a,b) => a - b).join(', ') || 'None';
+            const pick = (pickUp[group] || []).sort((a,b) => a - b).join(', ') || 'None';
+            flagsHTML += `<h4>Group ${group}</h4><p>Take out CTP flags: ${takeOut}</p><p>Pick Up: ${pick}</p>`;
+        }
+        ctpFlagsDiv.innerHTML = flagsHTML;
 
         // Show post-round
         postRoundSection.style.display = 'block';
@@ -128,12 +134,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const sortedByRaw = [...players].sort((a, b) => a.rawScore - b.rawScore);
         sortedByRaw.forEach((p, i) => p.bagtagOut = i < incomingTags.length ? incomingTags[i] : null);
 
-        bagtagDiv.innerHTML = `<h3>Bag Tag Results (Raw Scores)</h3>
-            <p>Tags from incoming pool (~35 in play of 75).</p>
-            <table><thead><tr><th>Player</th><th>Raw</th><th>Net</th><th>In</th><th>Out</th></tr></thead>
+        bagtagDiv.innerHTML = `<h3>Bag Tag Results (Based on Raw Scores)</h3>
+            <p>Tags redistributed among incoming tags (up to 75 available, ~35 in play). Players keep tags for week/challenges.</p>
+            <table><thead><tr><th>Player</th><th>Raw Score</th><th>Net Score</th><th>Incoming Tag</th><th>Outgoing Tag</th></tr></thead>
             <tbody>${sortedByRaw.map(p => `<tr><td>${p.name}</td><td>${p.rawScore}</td><td>${p.netScore.toFixed(2)}</td><td>${p.bagtagIn || 'None'}</td><td>${p.bagtagOut || 'None'}</td></tr>`).join('')}</tbody></table>
-            <p>Low Raw: ${sortedByRaw[0].name} (${sortedByRaw[0].rawScore})</p>`;
-        document.getElementById('buyins-payouts').innerHTML += `<p>Raw for low raw/bag tags; net for handicapped.</p>`;
+            <p>Low Raw Winner: ${sortedByRaw[0].name} (Score: ${sortedByRaw[0].rawScore}) - Use for buy-in payout.</p>`;
+        document.getElementById('buyins-payouts').innerHTML += `<p>Note: Use raw scores for low raw buy-in and bag tags; nets for handicapped payouts.</p>`;
     });
 
     function gatherPlayers() {
@@ -159,15 +165,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const bringOut = Object.fromEntries(groupStarts.map((_, i) => [i+1, []]));
         const pickUp = Object.fromEntries(groupStarts.map((_, i) => [i+1, []]));
 
-        // Sort groups by starting hole for simulation
-        const sortedGroups = [...groupStarts.keys()].sort((a, b) => groupStarts[a] - groupStarts[b]).map(i => i+1);
-
         ctpHoles.forEach(ctp => {
             // For each CTP, find relative order from each group's start
             const distances = groupStarts.map(start => (ctp - start + totalHoles) % totalHoles);
             const order = [...groupStarts.keys()].sort((a, b) => distances[a] - distances[b]).map(i => i+1);
 
-            // First in order brings out, last picks up
+            // First in order brings out (take out), last picks up
             bringOut[order[0]].push(ctp);
             pickUp[order[order.length - 1]].push(ctp);
         });
@@ -181,10 +184,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let csv = 'Sawmill League Event Export\n';
         csv += `Players: ${players.length}\n`;
         csv += 'Name,Handicap,Incoming Tag,Raw Score,Net Score,Outgoing Tag\n' + players.map(p => `${p.name},${p.handicap},${p.bagtagIn || ''},${p.rawScore || ''},${p.netScore || ''},${p.bagtagOut || ''}`).join('\n');
-        csv += '\n\nGroups:\n' + cardsDiv.innerText;
-        csv += '\n\nCTPs:\n' + ctpAssignmentsDiv.innerText;
-        csv += '\n\nFlags:\n' + ctpFlagsDiv.innerText;
-        csv += '\n\nBag Tags:\n' + bagtagDiv.innerText;
+        csv += '\n\nGroups:\n' + cardsDiv.innerText.replace(/\n/g, '\n');
+        csv += '\n\nCTPs:\n' + ctpAssignmentsDiv.innerText.replace(/\n/g, '\n');
+        csv += '\n\nFlags:\n' + ctpFlagsDiv.innerText.replace(/\n/g, '\n');
+        csv += '\n\nBag Tags:\n' + bagtagDiv.innerText.replace(/\n/g, '\n');
         downloadCSV(csv, 'sawmill-league-event.csv');
     });
 
@@ -196,12 +199,12 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
     }
 
-    // Save/Load
+    // Save/Load (carry over outgoing tags as next incoming)
     saveBtn.addEventListener('click', () => {
         gatherPlayers();
         const nextPlayers = players.map(p => ({name: p.name, handicap: p.handicap, bagtagIn: p.bagtagOut}));
         localStorage.setItem('sawmillEvent', JSON.stringify(nextPlayers));
-        alert('Saved! Outgoing tags for next incoming.');
+        alert('Event saved! Outgoing tags set as next week\'s incoming.');
     });
 
     loadBtn.addEventListener('click', () => {
@@ -217,9 +220,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 last.querySelector('.player-handicap').value = p.handicap || '';
                 last.querySelector('.player-bagtag-in').value = p.bagtagIn || '';
             });
-            alert('Loaded!');
+            alert('Loaded last event! Using outgoing tags as incoming.');
         } else {
-            alert('No saved event.');
+            alert('No saved event found.');
         }
     });
 });
