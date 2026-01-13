@@ -3,66 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sawmill Handicap & Bag Tag League Manager</title>
+    <title>Sawmill CTP Flag Manager</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Sawmill Disc Golf League Manager</h1>
-        <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m. • Check-in by 8:50 a.m.</p>
-        <p>Handicapped + Bag Tag League | 10 CTPs | Bogey-Free & Low Raw Buy-Ins</p>
+        <h1>Sawmill CTP Flag Manager</h1>
+        <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m.</p>
+        <p>Enter starting holes and CTP holes each week → Generate flag assignments</p>
     </header>
     
     <section id="setup">
-        <h2>Event Setup</h2>
-        <label for="course">Course/Layout:</label>
-        <input type="text" id="course" value="The Sawmill (24 Holes)" placeholder="e.g., The Sawmill Front 12 or Full 24">
+        <h2>Weekly Setup</h2>
         
-        <label for="total-players">Total Players (10–30 avg):</label>
-        <input type="number" id="total-players" min="3" value="16">
+        <label for="group-starts">Group Starting Holes (comma-separated, e.g. 1,10,12,21):</label>
+        <input type="text" id="group-starts" placeholder="1,10,12,21" autofocus>
         
-        <label for="ctp-holes">CTP Holes (comma-separated, change weekly):</label>
-        <input type="text" id="ctp-holes" value="3,4,5,6,8,10,11,12,19,24">
+        <label for="ctp-holes">CTP Holes (comma-separated, 10 holes, e.g. 3,4,5,6,8,10,11,12,19,24):</label>
+        <input type="text" id="ctp-holes" placeholder="3,4,5,6,8,10,11,12,19,24">
         
-        <label for="group-starts">Group Starting Holes (comma-separated, change weekly):</label>
-        <input type="text" id="group-starts" value="1,10,12,21">
-        
-        <h3>Players (Name, Handicap, Incoming Bag Tag # optional)</h3>
-        <div id="player-list"></div>
-        <button id="add-player">Add Player</button>
-    </section>
-    
-    <section id="generate">
-        <button id="generate-btn">Generate Cards, CTPs & Pre-Round Summary</button>
-    </section>
-    
-    <section id="post-round" style="display: none;">
-        <h2>Post-Round Inputs</h2>
-        <p>Enter raw scores for each player below (lowest raw score wins bag tags, low raw buy-in, etc.). Handicaps are for net payouts only.</p>
-        <div id="post-player-list"></div>
-        <button id="finalize-btn">Finalize Results & Assign Bag Tags</button>
+        <button id="generate-btn">Generate Flag Assignments</button>
     </section>
     
     <section id="output" style="display: none;">
-        <h2>Event Summary</h2>
-        <div id="cards"></div>
-        <div id="ctp-assignments"></div>
+        <h2>CTP Flag Assignments</h2>
         <div id="ctp-flags"></div>
-        <div id="handicap-summary"></div>
-        <div id="bagtag-summary"></div>
-        <div id="buyins-payouts">
-            <h3>Buy-Ins & Payouts</h3>
-            <ul>
-                <li><strong>Mandatory $3/player</strong>: $1 to Ace Pot (auto-entry for all), $2 to club</li>
-                <li><strong>CTP Entry (10 CTPs)</strong>: $5/player (optional) → 100% payout to 10 winners</li>
-                <li><strong>Bogey-Free Round</strong>: $1? (optional) → 100% payout</li>
-                <li><strong>Best Low Raw Score</strong>: $3? (optional) → 100% payout</li>
-            </ul>
-            <p>Ace Pot: Auto-entry for all—track separately.</p>
-        </div>
-        <button id="export-csv">Export to CSV</button>
-        <button id="save-event">Save This Event</button>
-        <button id="load-event">Load Last Event</button>
     </section>
     
     <script src="script.js"></script>
