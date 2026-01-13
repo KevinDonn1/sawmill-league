@@ -1,62 +1,23 @@
-body {
-    font-family: Arial, sans-serif;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    background: #f8f8f8;
+/* Add to end of existing styles.css */
+#score-list > div, #bagtag-results table {
+    margin: 12px 0;
 }
 
-header {
-    text-align: center;
-    background: #228B22;
-    color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-}
-
-section {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 20px;
-}
-
-label {
-    display: block;
-    margin: 15px 0 5px;
-    font-weight: bold;
-}
-
-input {
+#bagtag-results table, #current-tags table {
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
-    font-size: 16px;
+    border-collapse: collapse;
 }
 
-button {
+#bagtag-results th, #bagtag-results td, #current-tags th, #current-tags td {
+    border: 1px solid #ccc;
+    padding: 8px;
+    text-align: center;
+}
+
+#bagtag-results th, #current-tags th {
     background: #228B22;
     color: white;
-    border: none;
-    padding: 12px 20px;
-    font-size: 16px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 15px;
 }
 
-button:hover {
-    background: #006400;
-}
-
-#ctp-flags h4 {
-    margin-top: 25px;
-    color: #228B22;
-}
-
-#ctp-flags p {
-    margin: 8px 0;
-    font-size: 16px;
-}
+.gained { color: green; font-weight: bold; }
+.lost   { color: red;   font-weight: bold; }
