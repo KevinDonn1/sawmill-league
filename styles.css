@@ -1,110 +1,134 @@
 body {
     font-family: Arial, sans-serif;
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 20px;
-    background: #f8f8f8;
+    background: #f4f4f4;
 }
 
 header {
-    text-align: center;
     background: #228B22;
     color: white;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 25px;
+    text-align: center;
+    padding: 25px 20px;
+    border-radius: 8px 8px 0 0;
+    margin-bottom: 0;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 28px;
+}
+
+header p {
+    margin: 8px 0 0;
+    font-size: 16px;
 }
 
 section {
     background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    margin-bottom: 25px;
+    padding: 25px;
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #228B22;
+    margin-top: 0;
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
 }
 
 label {
     display: block;
     margin: 15px 0 6px;
     font-weight: bold;
+    color: #333;
 }
 
 input {
     width: 100%;
-    padding: 10px;
-    box-sizing: border-box;
+    padding: 12px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 
 button {
     background: #228B22;
     color: white;
     border: none;
-    padding: 12px 20px;
+    padding: 12px 24px;
     font-size: 16px;
     border-radius: 6px;
     cursor: pointer;
-    margin: 10px 5px 0 0;
+    margin: 15px 10px 0 0;
 }
 
 button:hover {
     background: #006400;
 }
 
+#add-player {
+    background: #3498db;
+}
+
+#add-player:hover {
+    background: #2980b9;
+}
+
 .player-row {
     display: flex;
-    gap: 10px;
-    margin-bottom: 12px;
+    gap: 15px;
+    margin-bottom: 15px;
     align-items: center;
 }
 
-.player-row input {
-    flex: 1;
-}
+.player-row input[type="text"] { flex: 2; }
+.player-row input[type="number"] { flex: 1; width: auto; }
 
 .remove-btn {
-    background: #c0392b;
-    padding: 8px 12px;
+    background: #e74c3c;
+    padding: 8px 14px;
     font-size: 14px;
 }
 
-#player-list, #score-list {
-    margin-bottom: 20px;
+#score-list .score-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    align-items: center;
+}
+
+#score-list label {
+    flex: 2;
+    margin: 0;
 }
 
 #ctp-flags h4 {
+    color: #2c3e50;
     margin: 25px 0 10px;
-    color: #228B22;
 }
 
 #ctp-flags p {
-    margin: 6px 0;
+    margin: 8px 0;
     font-size: 16px;
 }
 
-.results-list {
-    margin-top: 15px;
+#bagtag-results, #current-tags {
+    margin-top: 20px;
 }
 
-.results-list h4 {
+#bagtag-results h4, #current-tags h4 {
     margin: 20px 0 8px;
     color: #2c3e50;
 }
 
-.results-list ul {
-    list-style: none;
-    padding: 0;
-}
-
-.results-list li {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.results-list strong {
-    color: #228B22;
+#bagtag-results p, #current-tags p {
+    margin: 6px 0;
+    font-size: 15px;
 }
 
 .gained { color: #27ae60; font-weight: bold; }
