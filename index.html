@@ -21,10 +21,10 @@
         <label for="total-players">Total Players (10–30 avg):</label>
         <input type="number" id="total-players" min="3" value="16">
         
-        <label for="ctp-holes">CTP Holes (comma-separated, e.g., 3,4,5,6,8,10,11,12,19,24):</label>
+        <label for="ctp-holes">CTP Holes (comma-separated, change weekly):</label>
         <input type="text" id="ctp-holes" value="3,4,5,6,8,10,11,12,19,24">
         
-        <label for="group-starts">Group Starting Holes (comma-separated, e.g., 1,10,12,21):</label>
+        <label for="group-starts">Group Starting Holes (comma-separated, change weekly):</label>
         <input type="text" id="group-starts" value="1,10,12,21">
         
         <h3>Players (Name, Handicap, Incoming Bag Tag # optional)</h3>
@@ -53,17 +53,16 @@
         <div id="buyins-payouts">
             <h3>Buy-Ins & Payouts</h3>
             <ul>
-                <li><strong>Mandatory $3/player</strong>: $1 to Ace Pot (auto-entry for all players), $2 to club</li>
-                <li><strong>CTP Entry (10 CTPs)</strong>: $5/player (optional) → 100% payout to 10 winners (one per CTP hole)</li>
-                <li><strong>Bogey-Free Round</strong>: $1? (optional) → 100% payout to winner(s) with no bogeys or worse</li>
-                <li><strong>Best Low Raw Score</strong>: $3? (optional) → 100% payout to player with lowest raw score</li>
+                <li><strong>Mandatory $3/player</strong>: $1 to Ace Pot (auto-entry for all), $2 to club</li>
+                <li><strong>CTP Entry (10 CTPs)</strong>: $5/player (optional) → 100% payout to 10 winners</li>
+                <li><strong>Bogey-Free Round</strong>: $1? (optional) → 100% payout</li>
+                <li><strong>Best Low Raw Score</strong>: $3? (optional) → 100% payout</li>
             </ul>
-            <p>Ace Pot: Everyone auto-entered via mandatory $1—track running total and winners separately (e.g., in a shared sheet).</p>
-            <p>Total potential buy-in per player: $3 mandatory + $5 CTP + optional extras.</p>
+            <p>Ace Pot: Auto-entry for all—track separately.</p>
         </div>
         <button id="export-csv">Export to CSV</button>
-        <button id="save-event">Save This Event (for Next Week's Incoming Tags)</button>
-        <button id="load-event">Load Last Event (Use Outgoing as Incoming)</button>
+        <button id="save-event">Save This Event</button>
+        <button id="load-event">Load Last Event</button>
     </section>
     
     <script src="script.js"></script>
