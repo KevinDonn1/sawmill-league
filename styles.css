@@ -1,31 +1,80 @@
-body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 20px; background: #f4f4f4; }
+body {
+    font-family: Arial, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
 
-header { text-align: center; margin-bottom: 20px; background: #228B22; color: white; padding: 15px; border-radius: 8px; }
+header {
+    text-align: center;
+    margin-bottom: 20px;
+    background: #228B22;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+}
 
-section { background: white; padding: 20px; margin-bottom: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
 
-h2 { color: #006400; border-bottom: 1px solid #ccc; padding-bottom: 8px; margin-bottom: 15px; }
+label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
 
-label { display: block; margin: 12px 0 6px; font-weight: bold; }
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
 
-input { width: 100%; padding: 8px; margin-bottom: 12px; box-sizing: border-box; }
+button {
+    background: #228B22;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+}
 
-button { background: #228B22; color: white; padding: 10px 16px; border: none; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+button:hover {
+    background: #006400;
+}
 
-button:hover { background: #006400; }
+.player-entry, .post-player-entry {
+    display: flex;
+    margin-bottom: 10px;
+}
 
-.group-entry { border: 1px solid #ddd; padding: 12px; margin-bottom: 15px; border-radius: 6px; background: #f9f9f9; }
+.player-entry input, .post-player-entry input {
+    flex: 1;
+    margin-right: 5px;
+}
 
-.group-entry input[type="text"] { width: 60%; }
+.player-entry button, .post-player-entry button {
+    background: #B22222;
+}
 
-.starting-hole-entry { display: flex; align-items: center; margin-bottom: 12px; padding: 8px; background: #f0f8f0; border-radius: 4px; }
+.card-group {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
 
-.starting-hole-entry span { flex: 1; font-weight: bold; }
+#output div {
+    margin-top: 20px;
+}
 
-.starting-hole-entry input { width: 80px; text-align: center; }
-
-.assignment-group { margin-bottom: 15px; padding: 12px; border: 1px solid #ccc; border-radius: 6px; background: #f9fff9; }
-
-#output ul { list-style-type: none; padding-left: 0; }
-
-#output li { margin: 6px 0; font-size: 1.05em; }
+#ctp-flags ul {
+    list-style-type: none;
+}
