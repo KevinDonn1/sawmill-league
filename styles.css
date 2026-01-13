@@ -1,23 +1,111 @@
-/* Add to end of existing styles.css */
-#score-list > div, #bagtag-results table {
-    margin: 12px 0;
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background: #f8f8f8;
 }
 
-#bagtag-results table, #current-tags table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-#bagtag-results th, #bagtag-results td, #current-tags th, #current-tags td {
-    border: 1px solid #ccc;
-    padding: 8px;
+header {
     text-align: center;
-}
-
-#bagtag-results th, #current-tags th {
     background: #228B22;
     color: white;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
 }
 
-.gained { color: green; font-weight: bold; }
-.lost   { color: red;   font-weight: bold; }
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin: 15px 0 6px;
+    font-weight: bold;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    background: #228B22;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    margin: 10px 5px 0 0;
+}
+
+button:hover {
+    background: #006400;
+}
+
+.player-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+    align-items: center;
+}
+
+.player-row input {
+    flex: 1;
+}
+
+.remove-btn {
+    background: #c0392b;
+    padding: 8px 12px;
+    font-size: 14px;
+}
+
+#player-list, #score-list {
+    margin-bottom: 20px;
+}
+
+#ctp-flags h4 {
+    margin: 25px 0 10px;
+    color: #228B22;
+}
+
+#ctp-flags p {
+    margin: 6px 0;
+    font-size: 16px;
+}
+
+.results-list {
+    margin-top: 15px;
+}
+
+.results-list h4 {
+    margin: 20px 0 8px;
+    color: #2c3e50;
+}
+
+.results-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.results-list li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.results-list strong {
+    color: #228B22;
+}
+
+.gained { color: #27ae60; font-weight: bold; }
+.lost   { color: #e74c3c; font-weight: bold; }
