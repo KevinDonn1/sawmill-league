@@ -3,30 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sawmill CTP Flag Manager</title>
+    <title>Disc Golf CTP Flag Tracker</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <header>
-        <h1>Sawmill CTP Flag Manager</h1>
-        <p>The Sawmill • Silver Springs, FL • Sundays 9:00 a.m.</p>
-        <p>Enter starting holes and CTP holes each week → Generate flag assignments</p>
+        <h1>Disc Golf CTP Flag Tracker</h1>
+        <p>Customizable for any course — enter details each week to generate flag assignments.</p>
     </header>
     
     <section id="setup">
         <h2>Weekly Setup</h2>
         
-        <label for="group-starts">Group Starting Holes (comma-separated, e.g. 1,10,12,21):</label>
-        <input type="text" id="group-starts" placeholder="1,10,12,21" autofocus>
+        <label for="course-name">Course Name:</label>
+        <input type="text" id="course-name" placeholder="e.g., The Sawmill">
         
-        <label for="ctp-holes">CTP Holes (comma-separated, 10 holes, e.g. 3,4,5,6,8,10,11,12,19,24):</label>
-        <input type="text" id="ctp-holes" placeholder="3,4,5,6,8,10,11,12,19,24">
+        <label for="total-holes">Total Holes on Course:</label>
+        <select id="total-holes">
+            <option value="18">18 Holes (default)</option>
+            <option value="9">9 Holes</option>
+            <option value="24">24 Holes</option>
+            <option value="custom">Custom (enter below)</option>
+        </select>
+        <input type="number" id="custom-holes" style="display:none;" placeholder="Enter custom number" min="1">
+        
+        <label for="group-starts">Group Starting Holes (comma-separated):</label>
+        <input type="text" id="group-starts" placeholder="e.g., 1,10,12,21">
+        
+        <label for="ctp-holes">CTP Holes (comma-separated, any number):</label>
+        <input type="text" id="ctp-holes" placeholder="e.g., 3,4,5,6,8,10,11,12,19,24">
         
         <button id="generate-btn">Generate Flag Assignments</button>
     </section>
     
-    <section id="output" style="display: none;">
-        <h2>CTP Flag Assignments</h2>
+    <section id="output" style="display:none;">
+        <h2>CTP Flag Assignments for <span id="course-display"></span></h2>
         <div id="ctp-flags"></div>
     </section>
     
