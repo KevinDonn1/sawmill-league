@@ -1,41 +1,53 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const totalHolesSelect = document.getElementById('total-holes');
+    const customHolesInput = document.getElementById('custom-holes');
     const generateBtn = document.getElementById('generate-btn');
     const outputSection = document.getElementById('output');
     const ctpFlagsDiv = document.getElementById('ctp-flags');
+    const courseDisplay = document.getElementById('course-display');
 
-    const totalHoles = 24;
+    // Show custom holes input if selected
+    totalHolesSelect.addEventListener('change', () => {
+        customHolesInput.style.display = totalHolesSelect.value === 'custom' ? 'block' : 'none';
+    });
 
     generateBtn.addEventListener('click', () => {
+        const courseName = document.getElementById('course-name').value.trim() || 'Custom Course';
+        let totalHoles = parseInt(totalHolesSelect.value);
+        if (totalHolesSelect.value === 'custom') {
+            totalHoles = parseInt(customHolesInput.value);
+            if (isNaN(totalHoles) || totalHoles < 1) return alert('Enter a valid number of holes.');
+        }
+
         const startsInput = document.getElementById('group-starts').value.trim();
         const groupStarts = startsInput.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
-        const numGroups = groupStarts.length;
-
-        if (numGroups < 1) return alert('Enter at least one starting hole.');
+        if (groupStarts.length === 0) return alert('Enter group starting holes.');
 
         const ctpInput = document.getElementById('ctp-holes').value.trim();
         const ctpHoles = ctpInput.split(',').map(h => parseInt(h.trim())).filter(n => !isNaN(n));
+        if (ctpHoles.length === 0) return alert('Enter CTP holes.');
 
-        if (ctpHoles.length === 0) return alert('Enter at least some CTP holes.');
-
-        const { bringOut, pickUp } = calculateAssignments(groupStarts, ctpHoles);
+        // Calculate assignments
+        const { bringOut, pickUp } = calculateFlagAssignments(groupStarts, ctpHoles, totalHoles);
 
         let html = '';
-        for (let g = 1; g <= numGroups; g++) {
-            const takeOutList = (bringOut[g] || []).sort((a,b)=>a-b).join(', ') || 'None';
-            const pickUpList  = (pickUp[g]  || []).sort((a,b)=>a-b).join(', ') || 'None';
+        for (let g = 1; g <= groupStarts.length; g++) {
+            const takeOut = (bringOut[g] || []).sort((a, b) => a - b).join(', ') || 'None';
+            const pick = (pickUp[g] || []).sort((a, b) => a - b).join(', ') || 'None';
             html += `
                 <h4>Group ${g} (starts on hole ${groupStarts[g-1]})</h4>
-                <p><strong>Take out CTP flags:</strong> ${takeOutList}</p>
-                <p><strong>Pick Up:</strong> ${pickUpList}</p>
-                <hr>
+                <p>Take out CTP flags: ${takeOut}</p>
+                <p>Pick Up: ${pick}</p>
             `;
         }
-
         ctpFlagsDiv.innerHTML = html;
+
+        courseDisplay.textContent = courseName;
+
         outputSection.style.display = 'block';
     });
 
-    function calculateAssignments(groupStarts, ctpHoles) {
+    function calculateFlagAssignments(groupStarts, ctpHoles, totalHoles) {
         const bringOut = {};
         const pickUp = {};
         for (let i = 1; i <= groupStarts.length; i++) {
@@ -46,23 +58,21 @@ document.addEventListener('DOMContentLoaded', () => {
         ctpHoles.forEach(ctp => {
             let minDist = Infinity;
             let maxDist = -Infinity;
-            let firstGroup = -1;
-            let lastGroup = -1;
-
+            let firstG = -1;
+            let lastG = -1;
             groupStarts.forEach((start, idx) => {
                 let dist = (ctp - start + totalHoles) % totalHoles;
                 if (dist < minDist) {
                     minDist = dist;
-                    firstGroup = idx + 1;
+                    firstG = idx + 1;
                 }
                 if (dist > maxDist) {
                     maxDist = dist;
-                    lastGroup = idx + 1;
+                    lastG = idx + 1;
                 }
             });
-
-            if (firstGroup !== -1) bringOut[firstGroup].push(ctp);
-            if (lastGroup  !== -1) pickUp[lastGroup].push(ctp);
+            if (firstG !== -1) bringOut[firstG].push(ctp);
+            if (lastG !== -1) pickUp[lastG].push(ctp);
         });
 
         return { bringOut, pickUp };
