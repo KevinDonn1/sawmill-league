@@ -1,71 +1,81 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const totalHoles = 24;
-    let players = []; // optional — only used if you add players
+    console.log("Script loaded successfully!"); // Check browser console for this message
 
-    // Add Player (optional — can skip this)
-    document.getElementById('add-player')?.addEventListener('click', () => {
-        const div = document.createElement('div');
-        div.className = 'player-row';
-        div.innerHTML = `
+    const addPlayerBtn = document.getElementById('add-player');
+    const generateBtn = document.getElementById('generate-btn');
+    const playerList = document.getElementById('player-list');
+    const ctpFlags = document.getElementById('ctp-flags');
+    const output = document.getElementById('output');
+
+    if (!addPlayerBtn || !generateBtn) {
+        console.error("Buttons not found in HTML!");
+        return;
+    }
+
+    // Add Player button
+    addPlayerBtn.addEventListener('click', () => {
+        const row = document.createElement('div');
+        row.className = 'player-row';
+        row.innerHTML = `
             <input type="text" class="player-name" placeholder="Player Name">
-            <input type="number" class="player-tag" placeholder="Incoming Tag #" min="1" max="75">
+            <input type="number" class="player-tag" placeholder="Incoming Tag #">
             <button class="remove-btn">Remove</button>
         `;
-        document.getElementById('player-list').appendChild(div);
-        div.querySelector('.remove-btn').onclick = () => div.remove();
+        playerList.appendChild(row);
+        row.querySelector('.remove-btn').onclick = () => row.remove();
+        console.log("Player row added");
     });
 
-    // Main Generate Button — works even without players
-    document.getElementById('generate-btn').addEventListener('click', () => {
-        const startsInput = document.getElementById('group-starts').value.trim();
-        const groupStarts = startsInput.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
-        if (groupStarts.length === 0) return alert('Enter at least one starting hole.');
+    // Generate button - core flag logic
+    generateBtn.addEventListener('click', () => {
+        console.log("Generate clicked");
 
-        const ctpInput = document.getElementById('ctp-holes').value.trim();
-        const ctpHoles = ctpInput.split(',').map(h => parseInt(h.trim())).filter(n => !isNaN(n));
-        if (ctpHoles.length === 0) return alert('Enter CTP holes.');
+        const startsStr = document.getElementById('group-starts').value.trim();
+        const starts = startsStr.split(',').map(s => parseInt(s.trim())).filter(n => !isNaN(n));
 
-        // Calculate and show flag assignments
-        const { bringOut, pickUp } = calculateFlagAssignments(groupStarts, ctpHoles);
+        const ctpStr = document.getElementById('ctp-holes').value.trim();
+        const ctps = ctpStr.split(',').map(h => parseInt(h.trim())).filter(n => !isNaN(n));
+
+        if (starts.length === 0 || ctps.length === 0) {
+            alert("Enter starting holes and CTP holes.");
+            return;
+        }
+
+        const flags = calculateFlags(starts, ctps);
+
         let html = '';
-        for (let g = 1; g <= groupStarts.length; g++) {
-            const take = (bringOut[g] || []).sort((a,b)=>a-b).join(', ') || 'None';
-            const pick = (pickUp[g]  || []).sort((a,b)=>a-b).join(', ') || 'None';
+        for (let g = 1; g <= starts.length; g++) {
+            const takeOut = (flags.bringOut[g] || []).sort((a,b)=>a-b).join(', ') || 'None';
+            const pickUp = (flags.pickUp[g] || []).sort((a,b)=>a-b).join(', ') || 'None';
             html += `
-                <h4>Group ${g} (starts on hole ${groupStarts[g-1]})</h4>
-                <p><strong>Take out CTP flags:</strong> ${take}</p>
-                <p><strong>Pick Up:</strong> ${pick}</p>
+                <h4>Group ${g} (starts on hole ${starts[g-1]})</h4>
+                <p><strong>Take out CTP flags:</strong> ${takeOut}</p>
+                <p><strong>Pick Up:</strong> ${pickUp}</p>
                 <hr>
             `;
         }
-        document.getElementById('ctp-flags').innerHTML = html;
-        document.getElementById('output').style.display = 'block';
-
-        // Optional: show score section only if you want bag tags now
-        // document.getElementById('scores-section').style.display = 'block';
+        ctpFlags.innerHTML = html;
+        output.style.display = 'block';
     });
 
-    // Your original flag calculation function
-    function calculateFlagAssignments(groupStarts, ctpHoles) {
-        const bringOut = {};
-        const pickUp = {};
-        for (let i = 1; i <= groupStarts.length; i++) {
-            bringOut[i] = [];
-            pickUp[i] = [];
+    function calculateFlags(starts, ctps) {
+        const bringOut = {}, pickUp = {};
+        for (let i = 1; i <= starts.length; i++) {
+            bringOut[i] = []; pickUp[i] = [];
         }
+        const total = 24;
 
-        ctpHoles.forEach(ctp => {
-            let minDist = Infinity, maxDist = -Infinity;
-            let firstG = -1, lastG = -1;
-            groupStarts.forEach((start, idx) => {
-                let dist = (ctp - start + totalHoles) % totalHoles;
-                if (dist < minDist) { minDist = dist; firstG = idx + 1; }
-                if (dist > maxDist) { maxDist = dist; lastG = idx + 1; }
+        ctps.forEach(hole => {
+            let minD = Infinity, maxD = -Infinity;
+            let first = -1, last = -1;
+            starts.forEach((s, idx) => {
+                let d = (hole - s + total) % total;
+                if (d < minD) { minD = d; first = idx + 1; }
+                if (d > maxD) { maxD = d; last = idx + 1; }
             });
-            if (firstG !== -1) bringOut[firstG].push(ctp);
-            if (lastG  !== -1) pickUp[lastG].push(ctp);
+            bringOut[first].push(hole);
+            pickUp[last].push(hole);
         });
-
         return { bringOut, pickUp };
     }
 });
